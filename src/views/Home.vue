@@ -1,18 +1,29 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <h1 class="text-6xl">Dad jokes API</h1>
+    <div v-if="dadJokes.loading">Loading...</div>
+    <div v-if="!dadJokes.loading && dadJokes.error">{{ dadJokes.error }}</div>
+    <div v-if="dadJokes.data !== null">{{ dadJokes.data.joke }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import { defineComponent } from "vue";
+
+import useFetch from "@/hooks/useFetch";
 
 export default defineComponent({
-  name: 'Home',
-  components: {
-    HelloWorld,
+  setup() {
+    interface DadJokesResponse {
+      id: string;
+      joke: string;
+      status: number;
+    }
+    const dadJokes = useFetch<DadJokesResponse>("https://icanhazdadjoke.com/");
+
+    return {
+      dadJokes,
+    };
   },
 });
 </script>
